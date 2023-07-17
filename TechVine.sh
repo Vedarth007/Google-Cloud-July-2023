@@ -31,12 +31,12 @@ gcloud compute firewall-rules create http --network default --allow=tcp:80 \
 gcloud compute instance-groups managed create backend \
 --size 3 \
 --template primecalc \
---zone us-central1-f
+--zone us-central1-a
 
 
 gcloud compute instance-groups managed set-autoscaling backend \
 --target-cpu-utilization 0.8 --min-num-replicas 3 \
---max-num-replicas 10 --zone us-central1-f
+--max-num-replicas 10 --zone us-central1-a
 
 
 gcloud compute health-checks create http ilb-health --request-path /2
@@ -46,7 +46,7 @@ gcloud compute backend-services create prime-service \
 --protocol tcp --health-checks ilb-health
 
 gcloud compute backend-services add-backend prime-service \
---instance-group backend --instance-group-zone us-central1-f \
+--instance-group backend --instance-group-zone us-central1-a \
 --region us-central1
 
 
@@ -92,7 +92,7 @@ nohup python3 /usr/local/sbin/getprimes.py >/dev/null 2>&1 &' > frontend.sh
 
 
 
-gcloud compute instances create frontend --zone us-central1-b \
+gcloud compute instances create frontend --zone us-central1-a \
 --metadata-from-file startup-script=frontend.sh \
 --tags frontend
 
